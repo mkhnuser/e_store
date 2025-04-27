@@ -13,4 +13,4 @@ app.include_router(sellers_router)
 
 @app.get("/")
 async def get_root():
-    return {"Success": True}
+    return {"success": True}
