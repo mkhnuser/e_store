@@ -1,13 +1,17 @@
-from fastapi import APIRouter
-from ..models.customers_models import CustomerModel
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from ..db.db import get_db_session
+from ..pydantic_models.customers_models import CustomerModel
+from ..controllers import customers_controllers
 
 
 customers_router = APIRouter(prefix="/api/v1/customers")
 
 
 @customers_router.get("/")
-async def get_all_customers():
-    return {"customers": "all"}
+async def get_all_customers(db_session: Session = Depends(get_db_session)):
+    return {"customers": customers_controllers.get_all_customers(db_session)}
 
 
 @customers_router.get("/{customer_id}")

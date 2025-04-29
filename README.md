@@ -1,7 +1,9 @@
 # About
+
 This is an e-store where a customer can buy common goods and where sellers may sell them.
 
 ## User stories
+
 As a user, I want to be able to buy goods, so that I have some goods.
 As a user, I want to be able to add goods to my cart, so that later they are shipped to me.
 As a user, I want to pay with my banking card, so that later I obtain goods in my cart.

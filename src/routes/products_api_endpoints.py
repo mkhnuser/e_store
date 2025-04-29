@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..models.products_models import ProductModel
+from ..pydantic_models.products_models import ProductModel
 
 
 products_router = APIRouter(prefix="/api/v1/products")
