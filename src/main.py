@@ -2,17 +2,18 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from .routes.customers_api_endpoints import customers_router
-from .routes.sellers_api_endpoints import sellers_router
-from .routes.products_api_endpoints import products_router
-
-from .sqlalchemy_models.base import Base
-
-
 ###
-# INITIALIZE A DATABASE BY INTERPRETING A MODULE.
-from .db.db import engine
+# ALWAYS MAKE SURE ENVIRONMENT IS LOADED.
+from dotenv import load_dotenv
+
+load_dotenv("./.env.production")
 ###
+
+from .routes import customers_router
+from .routes import sellers_router
+from .routes import products_router
+from .db_models import Base
+from .db import engine
 
 
 @asynccontextmanager
