@@ -1,7 +1,6 @@
-import os
 from typing import Optional
 
-from sqlalchemy import String, Table, Column, ForeignKey, Numeric, MetaData
+from sqlalchemy import Table, Column, ForeignKey, Numeric, MetaData
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -17,13 +16,24 @@ class Base(DeclarativeBase):
     )
 
 
-class Product(Base):
+class ProductDatabaseModel(Base):
     __tablename__ = "products"
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-    )
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
+    description: Mapped[Optional[str]]
     price: Mapped[float] = mapped_column(Numeric())
+    reviews: Mapped[list["ProductReviewDatabaseModel"]] = relationship(
+        back_populates="product"
+    )
+
+
+class ProductReviewDatabaseModel(Base):
+    __tablename__ = "product_reviews"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    text: Mapped[Optional[str]]
+    value: Mapped[int]
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
+    product: Mapped[ProductDatabaseModel] = relationship(back_populates="reviews")
 
 
 users_roles_table = Table(
@@ -34,39 +44,27 @@ users_roles_table = Table(
 )
 
 
-class Role(Base):
+class RoleDatabaseModel(Base):
     __tablename__ = "roles"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(
-        String(int(os.environ["APP_ROLE_NAME_MAX_LENGTH"]))
-    )
-    description: Mapped[str] = mapped_column(
-        String(int(os.environ["APP_ROLE_DESCRIPTION_MAX_LENGTH"]))
-    )
-    users: Mapped[list["User"]] = relationship(
+    name: Mapped[str]
+    description: Mapped[Optional[str]]
+
+    users: Mapped[list["UserDatabaseModel"]] = relationship(
         secondary="users_roles", back_populates="roles"
     )
 
 
-class User(Base):
+class UserDatabaseModel(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(
-        String(int(os.environ["APP_USER_EMAIL_MAX_LENGTH"])), unique=True
-    )
-    phone_number: Mapped[Optional[str]] = mapped_column(
-        String(int(os.environ["APP_USER_PHONE_NUMBER_MAX_LENGTH"])), unique=True
-    )
-    first_name: Mapped[str] = mapped_column(
-        String(int(os.environ["APP_USER_FIRST_NAME_MAX_LENGTH"]))
-    )
-    last_name: Mapped[Optional[str]] = mapped_column(
-        String(int(os.environ["APP_USER_LAST_NAME_MAX_LENGTH"]))
-    )
-    age: Mapped[Optional[int]]
+    email: Mapped[str] = mapped_column(unique=True)
+    phone_number: Mapped[Optional[str]] = mapped_column(unique=True)
+    first_name: Mapped[str]
+    last_name: Mapped[Optional[str]]
 
-    roles: Mapped[list[Role]] = relationship(
+    roles: Mapped[list[RoleDatabaseModel]] = relationship(
         secondary="users_roles", back_populates="users"
     )

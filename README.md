@@ -10,3 +10,7 @@ As a user, I want to pay with my banking card, so that later I obtain goods in m
 
 As a seller, I want to be able to add goods to e-store, so that users of this store will buy them.
 As a seller, I want my personal protected account, so that no-one else is able to impersonate me.
+
+## Philosophical Considerations
+
+The Project Structure has to be as simple as possible.
