@@ -1,3 +1,5 @@
+import os
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -6,37 +8,39 @@ from .validation_models import UserValidationModel, ProductValidationModel
 
 
 ###### ROUTERS
-products_router = APIRouter(prefix="/api/v1/products")
-users_router = APIRouter(prefix="/api/v1/users")
+products_router = APIRouter(prefix=os.environ["APP_ROUTERS_PRODUCTS_PREFIX"])
+users_router = APIRouter(prefix=os.environ["APP_ROUTERS_USERS_PREFIX"])
 
 
 ###### USERS API ENDPOINTS
-@users_router.get("/")
-async def get_all_users(db_session: Session = Depends(get_db_session)):
-    return {"customers": True}
+@users_router.get(os.environ["APP_API_PATHS_USERS_GET_ALL_USERS"])
+async def get_all_users() -> list[UserValidationModel]:
+    return []
 
 
-@users_router.get("/{user_id}")
+@users_router.get(os.environ["APP_API_PATHS_USERS_GET_USER_BY_ID"])
 async def get_user_by_id(user_id: int):
-    return {"user_id": user_id}
+    return {}
 
 
-@users_router.post("/")
-async def post_user(user_model: UserValidationModel):
+@users_router.post(os.environ["APP_API_PATHS_USERS_POST_USER"])
+async def post_user(user_model: UserValidationModel) -> UserValidationModel:
     return user_model
 
 
 ###### PRODUCTS API ENDPOINTS
-@products_router.get("/")
-async def get_all_products():
-    return {"products": "all"}
+@products_router.get(os.environ["APP_API_PATHS_PRODUCTS_GET_ALL_PRODUCTS"])
+async def get_all_products() -> list[ProductValidationModel]:
+    return []
 
 
-@products_router.get("/{product_id}")
+@products_router.get(os.environ["APP_API_PATHS_PRODUCTS_GET_PRODUCT_BY_ID"])
 async def get_product_by_id(product_id: int):
-    return {"product_id": product_id}
+    return {}
 
 
-@products_router.post("/")
-async def post_product(product_model: ProductValidationModel):
+@products_router.post(os.environ["APP_API_PATHS_PRODUCTS_POST_PRODUCT"])
+async def post_product(
+    product_model: ProductValidationModel,
+) -> ProductValidationModel:
     return product_model

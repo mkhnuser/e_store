@@ -1,10 +1,11 @@
 import os
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 
 class UserValidationModel(BaseModel):
-    email: str = Field(
+    model_config = {"extra": "forbid"}
+    email: EmailStr = Field(
         min_length=int(os.environ["APP_USER_EMAIL_MIN_LENGTH"]),
         max_length=int(os.environ["APP_USER_EMAIL_MAX_LENGTH"]),
     )
@@ -26,6 +27,7 @@ class UserValidationModel(BaseModel):
 
 
 class ProductValidationModel(BaseModel):
+    model_config = {"extra": "forbid"}
     name: str = Field(
         min_length=int(os.environ["APP_PRODUCT_NAME_MIN_LENGTH"]),
         max_length=int(os.environ["APP_PRODUCT_NAME_MAX_LENGTH"]),
@@ -42,17 +44,19 @@ class ProductValidationModel(BaseModel):
 
 
 class ProductReviewValidationModel(BaseModel):
-    text: Optional[str] = Field(
-        max_length=int(os.environ["APP_PRODUCT_REVIEW_TEXT_MAX_LENGTH"])
-    )
+    model_config = {"extra": "forbid"}
     value: int = Field(
         ge=os.environ["APP_PRODUCT_REVIEW_MIN_VALUE"],
         le=os.environ["APP_PRODUCT_REVIEW_MAX_VALUE"],
+    )
+    text: Optional[str] = Field(
+        max_length=int(os.environ["APP_PRODUCT_REVIEW_TEXT_MAX_LENGTH"])
     )
     product_id: int
 
 
 class RoleValidationModel(BaseModel):
+    model_config = {"extra": "forbid"}
     name: str = Field(
         min_length=int(os.environ["APP_ROLE_NAME_MIN_LENGTH"]),
         max_length=int(os.environ["APP_ROLE_NAME_MAX_LENGTH"]),

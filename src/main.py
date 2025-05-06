@@ -1,3 +1,4 @@
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -22,6 +23,6 @@ app.include_router(users_router)
 app.include_router(products_router)
 
 
-@app.get("/")
+@app.get(os.environ["APP_API_PATHS_ROOT_INDEX"])
 async def get_root():
     return {"success": True}
