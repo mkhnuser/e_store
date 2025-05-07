@@ -18,6 +18,7 @@ class Base(DeclarativeBase):
 
 class ProductDatabaseModel(Base):
     __tablename__ = "products"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[Optional[str]]
@@ -29,9 +30,10 @@ class ProductDatabaseModel(Base):
 
 class ProductReviewDatabaseModel(Base):
     __tablename__ = "product_reviews"
+
     id: Mapped[int] = mapped_column(primary_key=True)
+    rating: Mapped[int]
     text: Mapped[Optional[str]]
-    value: Mapped[int]
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     product: Mapped[ProductDatabaseModel] = relationship(back_populates="reviews")
 
@@ -48,7 +50,7 @@ class RoleDatabaseModel(Base):
     __tablename__ = "roles"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str]
+    name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[Optional[str]]
 
     users: Mapped[list["UserDatabaseModel"]] = relationship(
@@ -60,8 +62,8 @@ class UserDatabaseModel(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(unique=True)
-    phone_number: Mapped[Optional[str]] = mapped_column(unique=True)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    phone_number: Mapped[Optional[str]] = mapped_column(unique=True, index=True)
     first_name: Mapped[str]
     last_name: Mapped[Optional[str]]
 
