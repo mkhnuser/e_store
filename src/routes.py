@@ -12,12 +12,22 @@ from .validation_models import (
 )
 
 
+######
 ###### ROUTERS
-products_router = APIRouter(prefix=os.environ["APP_ROUTERS_PRODUCTS_PREFIX"])
-users_router = APIRouter(prefix=os.environ["APP_ROUTERS_USERS_PREFIX"])
+######
+products_router = APIRouter(
+    prefix=os.environ["APP_ROUTERS_PRODUCTS_PREFIX"],
+    tags=[os.environ["APP_ROUTERS_PRODUCTS_TAG"]],
+)
+users_router = APIRouter(
+    prefix=os.environ["APP_ROUTERS_USERS_PREFIX"],
+    tags=[os.environ["APP_ROUTERS_USERS_TAG"]],
+)
 
 
+######
 ###### USERS API ENDPOINTS
+######
 @users_router.get(os.environ["APP_API_PATHS_USERS_GET_ALL_USERS"])
 async def get_all_users() -> list[UserValidationModelOut]:
     return []
@@ -33,7 +43,9 @@ async def post_user(user_model: UserValidationModelIn) -> UserValidationModelOut
     return {}
 
 
+######
 ###### PRODUCTS API ENDPOINTS
+######
 @products_router.get(os.environ["APP_API_PATHS_PRODUCTS_GET_ALL_PRODUCTS"])
 async def get_all_products() -> list[ProductValidationModelOut]:
     return []

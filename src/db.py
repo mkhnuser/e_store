@@ -1,17 +1,17 @@
 import os
-from typing import Generator
+from typing import AsyncGenerator
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session as SQLAlchemySession, sessionmaker
-
-
-engine = create_engine(os.environ["APP_DATABASE_URL"], echo=True)
-Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
 
-def get_db_session() -> Generator[SQLAlchemySession, None, None]:
-    db_session = Session()
+engine = create_async_engine(os.environ["APP_DATABASE_URL"], echo=False)
+Session = async_sessionmaker(engine, expire_on_commit=False)
+
+
+async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
+    async_session = Session()
     try:
-        yield db_session
+        yield async_session
     finally:
-        db_session.close()
+        await async_session.close()

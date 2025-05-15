@@ -27,6 +27,12 @@ class ProductDatabaseModel(Base):
         back_populates="product"
     )
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.id}, {self.name})"
+
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class ProductReviewDatabaseModel(Base):
     __tablename__ = "product_reviews"
@@ -36,6 +42,12 @@ class ProductReviewDatabaseModel(Base):
     text: Mapped[Optional[str]]
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     product: Mapped[ProductDatabaseModel] = relationship(back_populates="reviews")
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.id}, {self.rating}, {self.text})"
+
+    def __repr__(self) -> str:
+        return str(self)
 
 
 users_roles_table = Table(
@@ -57,6 +69,12 @@ class RoleDatabaseModel(Base):
         secondary="users_roles", back_populates="roles"
     )
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.id}, {self.name})"
+
+    def __repr__(self) -> str:
+        return str(self)
+
 
 class UserDatabaseModel(Base):
     __tablename__ = "users"
@@ -70,3 +88,9 @@ class UserDatabaseModel(Base):
     roles: Mapped[list[RoleDatabaseModel]] = relationship(
         secondary="users_roles", back_populates="users"
     )
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.id}, {self.email})"
+
+    def __repr__(self) -> str:
+        return str(self)
