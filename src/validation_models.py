@@ -10,6 +10,7 @@ class UserValidationModelBase(BaseModel):
             "examples": [
                 {
                     "email": "test@email.com",
+                    "password": "qwerty",
                     "phone_number": "+399000000000",
                     "first_name": "Vlad",
                     "last_name": "Mikheenko",
@@ -35,18 +36,25 @@ class UserValidationModelBase(BaseModel):
     last_name: Optional[str] = Field(
         max_length=int(os.environ["APP_USER_LAST_NAME_MAX_LENGTH"])
     )
-    roles: list["RoleValidationModelOut"] = Field(
+
+
+class UserValidationModelIn(UserValidationModelBase):
+    password: str = Field(
+        min_length=int(os.environ["APP_USER_PASSWORD_MIN_LENGTH"]),
+        max_length=int(os.environ["APP_USER_PASSWORD_MAX_LENGTH"]),
+    )
+    roles: list["RoleValidationModelIn"] = Field(
         min_length=int(os.environ["APP_USER_MIN_NUM_OF_ROLES"]),
         max_length=int(os.environ["APP_USER_MAX_NUM_OF_ROLES"]),
     )
 
 
-class UserValidationModelIn(UserValidationModelBase):
-    pass
-
-
 class UserValidationModelOut(UserValidationModelBase):
     id: PositiveInt
+    roles: list["RoleValidationModelOut"] = Field(
+        min_length=int(os.environ["APP_USER_MIN_NUM_OF_ROLES"]),
+        max_length=int(os.environ["APP_USER_MAX_NUM_OF_ROLES"]),
+    )
 
 
 class ProductValidationModelBase(BaseModel):

@@ -5,6 +5,7 @@ is_dotenv_loaded = load_dotenv("./.env.production")
 print(is_dotenv_loaded)
 
 
+from validation_models import UserValidationModelOut
 from sqlalchemy import *
 from db_models import *
 from db import *
@@ -27,11 +28,11 @@ async def get_all_users() -> None:
     for user in res:
         print(user)
     await s.close()
-    return res
 
 
 async def main():
     async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
     await create_some_users()

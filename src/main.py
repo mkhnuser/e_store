@@ -10,12 +10,14 @@ from .db import engine
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     # THE APP START UP LOGIC GOES HERE.
-    Base.metadata.create_all(bind=engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
     yield
+    await engine.dispose()
     # THE APP CLEAN UP LOGIC GOES HERE.
-    engine.dispose()
 
 
 app = FastAPI(lifespan=lifespan, debug=True)

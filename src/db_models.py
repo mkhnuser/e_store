@@ -1,6 +1,9 @@
+import datetime as dt
 from typing import Optional
+from decimal import Decimal
 
-from sqlalchemy import Table, Column, ForeignKey, Numeric, MetaData
+from sqlalchemy import DateTime, String, Table, Column, ForeignKey, Numeric, MetaData
+from sqlalchemy import func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -22,7 +25,17 @@ class ProductDatabaseModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[Optional[str]]
-    price: Mapped[float] = mapped_column(Numeric())
+    price: Mapped[Decimal] = mapped_column(Numeric())
+
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+    )
+    updated_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        default=dt.datetime.now,
+    )
+
     reviews: Mapped[list["ProductReviewDatabaseModel"]] = relationship(
         back_populates="product"
     )
@@ -40,6 +53,16 @@ class ProductReviewDatabaseModel(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     rating: Mapped[int]
     text: Mapped[Optional[str]]
+
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+    )
+    updated_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        default=dt.datetime.now,
+    )
+
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
     product: Mapped[ProductDatabaseModel] = relationship(back_populates="reviews")
 
@@ -65,8 +88,18 @@ class RoleDatabaseModel(Base):
     name: Mapped[str] = mapped_column(unique=True, index=True)
     description: Mapped[Optional[str]]
 
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+    )
+    updated_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        default=dt.datetime.now,
+    )
+
     users: Mapped[list["UserDatabaseModel"]] = relationship(
-        secondary="users_roles", back_populates="roles"
+        secondary="users_roles",
+        back_populates="roles",
     )
 
     def __str__(self) -> str:
@@ -80,13 +113,24 @@ class UserDatabaseModel(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(unique=True, index=True)
     phone_number: Mapped[Optional[str]] = mapped_column(unique=True, index=True)
+    email: Mapped[str] = mapped_column(unique=True, index=True)
+    password: Mapped[str] = mapped_column(String(256))
     first_name: Mapped[str]
     last_name: Mapped[Optional[str]]
 
+    created_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        server_default=func.now(),
+    )
+    updated_at: Mapped[dt.datetime] = mapped_column(
+        DateTime,
+        default=dt.datetime.now,
+    )
+
     roles: Mapped[list[RoleDatabaseModel]] = relationship(
-        secondary="users_roles", back_populates="users"
+        secondary="users_roles",
+        back_populates="users",
     )
 
     def __str__(self) -> str:
