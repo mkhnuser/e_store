@@ -1,4 +1,5 @@
 import os
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -7,6 +8,11 @@ from .routes import users_router
 from .routes import products_router
 from .db_models import Base
 from .db import engine
+
+
+logger_name = f"{os.environ['APP_LOGGER_ROOT_LOGGER_NAME']}.{__name__}"
+logger = logging.getLogger(logger_name)
+logger.info(f"\nA NEW LOGGER {logger_name} HAS BEEN CREATED!\n")
 
 
 @asynccontextmanager

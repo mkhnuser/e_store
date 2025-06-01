@@ -49,7 +49,7 @@ async def post_user(
         # for role in user_roles:
         #     user.roles.append(role)
 
-        # TODO: THINK ABOUT DELEGATION TO A THREAD?
+        # TODO: THINK ABOUT DELEGATION TO A THREAD SINCE PASSWORD GENERATION IS EXPENSIVE IN TERMS OF TIME?
         user.password = hash_password(password)
         s.add(user)
         await s.commit()
